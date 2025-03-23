@@ -136,7 +136,7 @@ This is particularly useful for debugging cookie and login issues, allowing you 
 
 ## Documentation Links
 
-- [Usage Guide](USAGE.md)
+- [Usage Guide](USAGE_EN.md)
 
 ## Contact
 

@@ -139,7 +139,7 @@ python main.py --url https://example.com --cookies "sessionid=abc123" --show tru
 这对于调试Cookie和登录问题特别有用，可以观察浏览器的实际行为和重定向情况。 
 ## 文档链接
 
-- [使用手册](doc/USAGE.md)
+- [使用手册](USAGE.md)
 
 ## 联系方式
 
