@@ -1,0 +1,8 @@
+playwright
+openai
+pandas
+openpyxl
+python-dotenv
+argparse
+rich
+tqdm
