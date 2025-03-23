@@ -1,5 +1,5 @@
 # AITestCase
-[English Version](doc/README_EN.md) | [中文版本](doc/README_CN.md)
+[English ](README_EN.md) | [中文](README_CN.md)
 根据网页当前页面和需求文档生成测试用例的工具
 
 ## 功能特点

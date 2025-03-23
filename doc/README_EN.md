@@ -1,5 +1,5 @@
  # AITestCase
-[English Version](doc/README_EN.md) | [中文版本](doc/README_CN.md)
+[English ](README_EN.md) | [中文](README_CN.md)
 A tool for generating test cases based on the current webpage and requirement documents.
 
 ## Features
