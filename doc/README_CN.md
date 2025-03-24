@@ -10,6 +10,7 @@
 - 📊 **Excel导出**：支持将测试用例导出为Excel格式
 - 📝 **需求关联**：自动将测试用例与需求文档关联
 - 🛠️ **可定制化**：灵活的配置选项适应不同项目需求
+- 📄 **多种文档格式**：支持纯文本、Markdown和Word(DOCX)等多种格式的需求文档
 
 ## 安装步骤
 
@@ -40,6 +41,9 @@ python main.py --url <网站URL> --cookies "<Cookie字符串>"
 
 # 指定设备类型（桌面/移动/平板）
 python main.py --url <网站URL> --device <desktop|mobile|tablet>
+
+# 使用需求文档（支持.txt、.md、.docx格式）
+python main.py --url <网站URL> --requirements "需求1.docx,需求2.md,需求3.txt"
 ```
 
 ### Cookie登录支持

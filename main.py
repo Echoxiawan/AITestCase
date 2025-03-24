@@ -13,6 +13,7 @@ import sys
 import time
 from typing import Any, Dict, List, Optional, Tuple, Set
 import json
+import tempfile
 
 from core.web_explorer import WebExplorer
 from core.test_generator import TestGenerator
@@ -142,25 +143,71 @@ async def run_web_explorer(
 
 def load_multiple_requirements(requirements_files: List[str]) -> Dict[str, str]:
     """
-    加载多个需求文档文件
+    加载多个需求文档文件，支持txt、docx和markdown格式，并将非markdown格式转换为markdown
 
     Args:
         requirements_files (List[str]): 需求文档文件路径列表
 
     Returns:
-        Dict[str, str]: 以文件名为键，内容为值的字典
+        Dict[str, str]: 以文件名为键，markdown内容为值的字典
     """
     requirements_dict = {}
+    temp_dir = tempfile.mkdtemp(prefix="requirements_")
+    logger.info(f"创建临时目录用于存储转换后的markdown文件: {temp_dir}")
 
     for file_path in requirements_files:
         try:
             filename = os.path.basename(file_path)
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read()
-                requirements_dict[filename] = content
-            console.print(f"[bold green]已加载需求文档: {filename}[/bold green]")
+            file_extension = os.path.splitext(filename)[1].lower()
+            
+            # 获取不带扩展名的文件名
+            base_filename = os.path.splitext(filename)[0]
+            
+            if file_extension == '.docx':
+                try:
+                    import docling
+                    from docling.document_converter import DocumentConverter
+                except ImportError:
+                    console.print("[bold red]缺少docling库，正在安装...[/bold red]")
+                    import subprocess
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", "docling"])
+                    import docling
+                    from docling.document_converter import DocumentConverter
+                
+                # 转换文件为markdown
+                console.print(f"[bold yellow]正在将docx文件转换为markdown: {filename}[/bold yellow]")
+                
+                # 创建markdown输出路径
+                md_output_path = os.path.join(temp_dir, f"{base_filename}.md")
+                
+                # 使用DocumentConverter转换docx为markdown
+                converter = DocumentConverter()
+                result = converter.convert(file_path)
+                markdown_content = result.document.export_to_markdown()
+                
+                # 保存markdown内容
+                with open(md_output_path, "w", encoding="utf-8") as md_file:
+                    md_file.write(markdown_content)
+                
+                # 将markdown内容添加到字典
+                requirements_dict[filename] = markdown_content
+                
+                console.print(f"[bold green]已成功将docx文件转换为markdown: {filename}[/bold green]")
+            elif file_extension in ['.md', '.txt']:
+                # 对于txt或markdown文件，直接读取
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    requirements_dict[filename] = content
+                
+                file_type = "markdown" if file_extension == '.md' else "文本"
+                console.print(f"[bold green]已加载{file_type}需求文档: {filename}[/bold green]")
+            else:
+                console.print(f"[bold yellow]不支持的文件格式: {file_extension}，跳过文件: {filename}[/bold yellow]")
+                continue
+                
         except Exception as e:
-            console.print(f"[bold red]读取文件 {file_path} 失败: {str(e)}[/bold red]")
+            console.print(f"[bold red]处理文件 {file_path} 失败: {str(e)}[/bold red]")
+            logger.error(f"处理文件 {file_path} 失败: {str(e)}", exc_info=True)
 
     return requirements_dict
 

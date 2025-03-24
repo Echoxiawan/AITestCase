@@ -1,4 +1,4 @@
- # AITestCase
+# AITestCase
 [English ](doc/README_EN.md) | [中文](doc/README_CN.md)
 A tool for generating test cases based on the current webpage and requirement documents.
 
@@ -10,6 +10,7 @@ A tool for generating test cases based on the current webpage and requirement do
 - 📊 **Excel Export**: Supports exporting test cases to Excel format.
 - 📝 **Requirement Association**: Automatically associates test cases with requirement documents.
 - 🛠️ **Customizable**: Flexible configuration options to suit different project needs.
+- 📄 **Multiple Document Formats**: Supports requirement documents in various formats including plain text, Markdown, and Word (DOCX).
 
 ## Installation Steps
 
@@ -40,6 +41,9 @@ python main.py --url <website URL> --cookies "<cookie string>"
 
 # Specify device type (desktop/mobile/tablet)
 python main.py --url <website URL> --device <desktop|mobile|tablet>
+
+# Use requirements documents (supports .txt, .md, .docx)
+python main.py --url <website URL> --requirements "requirement1.docx,requirement2.md,requirement3.txt"
 ```
 
 ### Cookie Login Support

@@ -63,6 +63,8 @@ python main.py
    - AI智能登录：使用AI技术自动识别各种登录页面元素
    - Cookies登录：提供包含认证信息的Cookies字符串
 4. **输入需求文档**：可以输入多个需求文档的名称和路径
+   - 支持的格式包括.txt（纯文本）、.md（Markdown）和.docx（Microsoft Word）
+   - Word文档将自动转换为Markdown格式进行分析
 5. **选择测试用例生成范围**：是否包含旧功能的测试用例
 
 ### 3.3 命令行参数
@@ -70,7 +72,7 @@ python main.py
 也可以通过命令行参数运行工具，支持批量处理和自动化集成：
 
 ```bash
-python main.py --urls "https://example.com,https://example.com/page2" --requirements-files "requirement1.txt,requirement2.txt" --include-old
+python main.py --urls "https://example.com,https://example.com/page2" --requirements-files "需求1.docx,需求2.txt" --include-old
 ```
 
 支持的命令行参数：
@@ -80,7 +82,7 @@ python main.py --urls "https://example.com,https://example.com/page2" --requirem
 - `--password`: 登录密码
 - `--captcha`: 验证码
 - `--cookies`: Cookies字符串
-- `--requirements-files`: 新需求文档文件路径列表，用逗号分隔
+- `--requirements-files`: 需求文档文件路径列表，用逗号分隔（支持.txt、.md、.docx格式）
 - `--include-old`: 是否包含旧功能的测试用例（不需要值，仅标志）
 - `--api-key`: OpenAI API密钥
 - `--output`: 输出文件名
@@ -121,14 +123,34 @@ AI智能登录特别适用于以下场景：
 - 自定义登录组件：使用自定义UI组件或特殊布局的登录表单
 - 多步骤登录：需要多步操作才能完成的登录流程
 
-
-
 命令行方式启动时，可以使用 `--device-type` 参数指定设备类型：
 ```bash
 python main.py --urls "https://example.com" --device-type mobile
 ```
 
+### 3.5 文档格式支持
 
+本工具现在支持多种格式的需求文档：
+
+#### 3.5.1 支持的格式
+- **纯文本 (.txt)**：简单的文本需求文件
+- **Markdown (.md)**：具有Markdown格式的结构化内容
+- **Microsoft Word (.docx)**：Office文档格式
+
+#### 3.5.2 文档转换
+当您提供Word文档时，工具会自动：
+1. 将DOCX文件转换为Markdown格式
+2. 保留文档结构，包括标题、列表和表格
+3. 使用转换后的内容生成测试用例
+
+#### 3.5.3 不同文档格式的使用示例
+```bash
+# 使用Word文档
+python main.py --url https://example.com --requirements-files "需求说明.docx"
+
+# 同时使用多种文档格式
+python main.py --url https://example.com --requirements-files "规格说明.docx,补充说明.txt,接口文档.md"
+```
 
 ## 4. 输出结果
 
@@ -185,19 +207,19 @@ python main.py --urls "https://example.com" --requirements-files "requirements.t
 ### 7.2 多个页面，多个需求文档
 
 ```bash
-python main.py --urls "https://example.com/login,https://example.com/dashboard" --requirements-files "login_requirements.txt,dashboard_requirements.txt" --include-old
+python main.py --urls "https://example.com/login,https://example.com/dashboard" --requirements-files "登录需求.docx,仪表盘需求.txt" --include-old
 ```
 
 ### 7.3 使用Cookies探索多个页面
 
 ```bash
-python main.py --urls "https://example.com/profile,https://example.com/settings" --cookies "session=abc123; token=xyz789" --requirements-files "new_features.txt"
+python main.py --urls "https://example.com/profile,https://example.com/settings" --cookies "session=abc123; token=xyz789" --requirements-files "新功能.txt"
 ```
 
 ### 7.4 使用AI智能登录
 
 ```bash
-python main.py --urls "https://example.com/login" --username "test_user" --password "test_password" --use-ai-login --requirements-files "login_requirements.txt"
+python main.py --urls "https://example.com/login" --username "test_user" --password "test_password" --use-ai-login --requirements-files "登录需求.txt"
 ```
 
 ## 8. 常见问题与解决方案

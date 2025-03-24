@@ -1,4 +1,4 @@
- # AITestCase Usage Guide
+# AITestCase Usage Guide
 
 ## 1. Introduction
 
@@ -63,6 +63,8 @@ After starting the tool, follow the prompts to enter information:
    - AI Smart Login: Automatically identify various login page elements using AI technology
    - Cookies Login: Provide a cookie string containing authentication information
 4. **Enter Requirement Documents**: Multiple requirement document names and paths can be entered
+   - Supported formats include .txt (plain text), .md (Markdown), and .docx (Microsoft Word)
+   - Word documents will be automatically converted to Markdown format for analysis
 5. **Select Test Case Generation Scope**: Whether to include test cases for old features
 
 ### 3.3 Command Line Parameters
@@ -70,7 +72,7 @@ After starting the tool, follow the prompts to enter information:
 The tool can also be run with command line parameters, supporting batch processing and automated integration:
 
 ```bash
-python main.py --urls "https://example.com,https://example.com/page2" --requirements-files "requirement1.txt,requirement2.txt" --include-old
+python main.py --urls "https://example.com,https://example.com/page2" --requirements-files "requirement1.docx,requirement2.txt" --include-old
 ```
 
 Supported command line parameters:
@@ -80,7 +82,7 @@ Supported command line parameters:
 - `--password`: Login password
 - `--captcha`: Captcha
 - `--cookies`: Cookies string
-- `--requirements-files`: List of new requirement document file paths, separated by commas
+- `--requirements-files`: List of new requirement document file paths, separated by commas (supports .txt, .md, .docx formats)
 - `--include-old`: Whether to include test cases for old features (no value needed, just a flag)
 - `--api-key`: OpenAI API key
 - `--output`: Output filename
@@ -124,6 +126,30 @@ AI Smart Login is particularly suitable for the following scenarios:
 When starting with command line, you can specify the device type with the `--device-type` parameter:
 ```bash
 python main.py --urls "https://example.com" --device-type mobile
+```
+
+### 3.5 Document Format Support
+
+The tool now supports multiple document formats for requirement documents:
+
+#### 3.5.1 Supported Formats
+- **Plain Text (.txt)**: Simple text files with requirements
+- **Markdown (.md)**: Structured content with Markdown formatting
+- **Microsoft Word (.docx)**: Office document format
+
+#### 3.5.2 Document Conversion
+When you provide a Word document, the tool automatically:
+1. Converts the DOCX file to Markdown format
+2. Preserves the document structure including headings, lists, and tables
+3. Uses the converted content for test case generation
+
+#### 3.5.3 Usage Examples with Different Document Formats
+```bash
+# Using a Word document
+python main.py --url https://example.com --requirements-files "requirements.docx"
+
+# Using multiple document formats together
+python main.py --url https://example.com --requirements-files "specs.docx,additional_notes.txt,api_documentation.md"
 ```
 
 ## 4. Output Results
@@ -180,7 +206,7 @@ python main.py --urls "https://example.com" --requirements-files "requirements.t
 ### 7.2 Multiple Pages, Multiple Requirement Documents
 
 ```bash
-python main.py --urls "https://example.com/login,https://example.com/dashboard" --requirements-files "login_requirements.txt,dashboard_requirements.txt" --include-old
+python main.py --urls "https://example.com/login,https://example.com/dashboard" --requirements-files "login_requirements.docx,dashboard_requirements.txt" --include-old
 ```
 
 ### 7.3 Explore Multiple Pages with Cookies

@@ -6,3 +6,4 @@ python-dotenv
 argparse
 rich
 tqdm
+docling
