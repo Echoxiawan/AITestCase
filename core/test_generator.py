@@ -391,6 +391,7 @@ class TestGenerator:
         for attempt in range(max_retries):
             try:
                 # 调用OpenAI Chat Completions API
+                logger.info(f"请求OpenAI prompt： {prompt} ")
                 response = self.client.chat.completions.create(
                     model=OPENAI_MODEL,
                     messages=[
@@ -429,6 +430,7 @@ class TestGenerator:
         try:
             # 提取JSON部分
             json_str = self._extract_json(response)
+            logger.info(f"成功解析返回结果： {json_str} ")
             if not json_str:
                 logger.error("无法从API响应中提取有效的JSON")
                 return []

@@ -760,10 +760,63 @@ class WebExplorer:
             await safe_evaluate("""() => {
                 // 分析页面主要功能块
                 const functionalAreas = [];
+                
+                // 排除的区域选择器列表
+                const excludedSelectors = [
+                    // 页眉区域
+                    'header', '.header', '#header', '[role="banner"]',
+                    // 页脚区域
+                    'footer', '.footer', '#footer', '[role="contentinfo"]',
+                    '.copyright', '#copyright', '.legal', '#legal',
+                    '.site-info', '#site-info', '.site-footer', '#site-footer',
+                    '.bottom-footer', '#bottom-footer', '.footer-bottom', '#footer-bottom',
+                    '.footer-links', '#footer-links', '.footer-menu', '#footer-menu',
+                    '.footer-wrapper', '#footer-wrapper', '.footer-content', '#footer-content',
+                    '.friend-links', '#friend-links', '.friendship-links', '#friendship-links',
+                    '.links', '.link-list', '.link-area', '.about-links',
+                    '.site-record', '#site-record', '.icp', '#icp', '.beian', '#beian',
+                    // 导航区域
+                    'nav', '.nav', '#nav', '.navbar', '#navbar', '[role="navigation"]',
+                    '.menu', '#menu', '.navigation', '#navigation',
+                    '.breadcrumb', '.breadcrumbs', '#breadcrumb', '#breadcrumbs',
+                    // 侧边栏区域
+                    'aside', '.sidebar', '#sidebar', '[role="complementary"]',
+                    // 社交和分享区域
+                    '.social-links', '#social-links', '.share-buttons', '#share-buttons',
+                    '.social-media', '#social-media', '.social-icons', '#social-icons',
+                    // 其他通用区域
+                    '.site-policy', '#site-policy', '.terms', '#terms', '.privacy', '#privacy', 
+                    '.about-us', '#about-us', '.contact-us', '#contact-us',
+                    '.help-center', '#help-center', '.support-links', '#support-links',
+                    '.subscribe', '#subscribe', '.newsletter', '#newsletter',
+                    // 与底部相关的区选择器
+                    '[class*="footer"]', '[id*="footer"]', '[class*="bottom"]', '[id*="bottom"]',
+                    '[class*="copyright"]', '[id*="copyright"]', '[class*="rights"]', '[id*="rights"]',
+                    '.about-section', '#about-section', '.contact-section', '#contact-section'
+                ];
+                
+                // 检查元素是否在排除区域内
+                const isInExcludedArea = (element) => {
+                    if (!element) return false;
+                    
+                    // 检查元素的祖先是否匹配排除选择器
+                    let parent = element;
+                    while (parent) {
+                        for (const selector of excludedSelectors) {
+                            if (parent.matches && parent.matches(selector)) return true;
+                        }
+                        parent = parent.parentElement;
+                    }
+                    
+                    return false;
+                };
 
                 // 识别页面上的主要功能区域和操作
                 const addFunctionalArea = (element, type, importance = 'medium') => {
                     if (!element) return;
+                    
+                    // 检查是否在排除区域内
+                    if (isInExcludedArea(element)) return;
 
                     // 检查是否已包含此元素
                     const elementRect = element.getBoundingClientRect();
@@ -829,14 +882,16 @@ class WebExplorer:
 
                 // 识别表单（高优先级功能区域）
                 document.querySelectorAll('form').forEach(form => {
-                    addFunctionalArea(form, 'form', 'high');
+                    if (!isInExcludedArea(form)) {
+                        addFunctionalArea(form, 'form', 'high');
+                    }
                 });
 
                 // 识别可能的功能卡片/面板
                 ['section', '.card', '.panel', '.box', '.container', '.module', '[role="region"]'].forEach(selector => {
                     document.querySelectorAll(selector).forEach(el => {
-                        // 仅添加包含交互元素的区域
-                        if (el.querySelectorAll('button, a, input, select, textarea').length > 0) {
+                        // 仅添加包含交互元素且不在排除区域内的区域
+                        if (!isInExcludedArea(el) && el.querySelectorAll('button, a, input, select, textarea').length > 0) {
                             addFunctionalArea(el, 'functional_module');
                         }
                     });
@@ -851,7 +906,59 @@ class WebExplorer:
 
             # 智能分析表单（关注关键属性而非所有属性）
             await safe_evaluate("""() => {
-                return Array.from(document.forms).map(form => {
+                // 排除的区域选择器列表
+                const excludedSelectors = [
+                    // 页眉区域
+                    'header', '.header', '#header', '[role="banner"]',
+                    // 页脚区域
+                    'footer', '.footer', '#footer', '[role="contentinfo"]',
+                    '.copyright', '#copyright', '.legal', '#legal',
+                    '.site-info', '#site-info', '.site-footer', '#site-footer',
+                    '.bottom-footer', '#bottom-footer', '.footer-bottom', '#footer-bottom',
+                    '.footer-links', '#footer-links', '.footer-menu', '#footer-menu',
+                    '.footer-wrapper', '#footer-wrapper', '.footer-content', '#footer-content',
+                    '.friend-links', '#friend-links', '.friendship-links', '#friendship-links',
+                    '.links', '.link-list', '.link-area', '.about-links',
+                    '.site-record', '#site-record', '.icp', '#icp', '.beian', '#beian',
+                    // 导航区域
+                    'nav', '.nav', '#nav', '.navbar', '#navbar', '[role="navigation"]',
+                    '.menu', '#menu', '.navigation', '#navigation',
+                    '.breadcrumb', '.breadcrumbs', '#breadcrumb', '#breadcrumbs',
+                    // 侧边栏区域
+                    'aside', '.sidebar', '#sidebar', '[role="complementary"]',
+                    // 社交和分享区域
+                    '.social-links', '#social-links', '.share-buttons', '#share-buttons',
+                    '.social-media', '#social-media', '.social-icons', '#social-icons',
+                    // 其他通用区域
+                    '.site-policy', '#site-policy', '.terms', '#terms', '.privacy', '#privacy', 
+                    '.about-us', '#about-us', '.contact-us', '#contact-us',
+                    '.help-center', '#help-center', '.support-links', '#support-links',
+                    '.subscribe', '#subscribe', '.newsletter', '#newsletter',
+                    // 与底部相关的区选择器
+                    '[class*="footer"]', '[id*="footer"]', '[class*="bottom"]', '[id*="bottom"]',
+                    '[class*="copyright"]', '[id*="copyright"]', '[class*="rights"]', '[id*="rights"]',
+                    '.about-section', '#about-section', '.contact-section', '#contact-section'
+                ];
+                
+                // 检查元素是否在排除区域内
+                const isInExcludedArea = (element) => {
+                    if (!element) return false;
+                    
+                    // 检查元素的祖先是否匹配排除选择器
+                    let parent = element;
+                    while (parent) {
+                        for (const selector of excludedSelectors) {
+                            if (parent.matches && parent.matches(selector)) return true;
+                        }
+                        parent = parent.parentElement;
+                    }
+                    
+                    return false;
+                };
+                
+                return Array.from(document.forms)
+                    .filter(form => !isInExcludedArea(form)) // 过滤掉在排除区域内的表单
+                    .map(form => {
                     // 分析表单的用途
                     const formPurpose = (() => {
                         const action = form.action.toLowerCase();
@@ -930,6 +1037,58 @@ class WebExplorer:
 
             # 提取页面关键交互元素（按钮、链接等）
             await safe_evaluate("""() => {
+                // 排除的区域选择器列表
+                const excludedSelectors = [
+                    // 页眉区域
+                    'header', '.header', '#header', '[role="banner"]',
+                    // 页脚区域
+                    'footer', '.footer', '#footer', '[role="contentinfo"]',
+                    '.copyright', '#copyright', '.legal', '#legal',
+                    '.site-info', '#site-info', '.site-footer', '#site-footer',
+                    '.bottom-footer', '#bottom-footer', '.footer-bottom', '#footer-bottom',
+                    '.footer-links', '#footer-links', '.footer-menu', '#footer-menu',
+                    '.footer-wrapper', '#footer-wrapper', '.footer-content', '#footer-content',
+                    '.friend-links', '#friend-links', '.friendship-links', '#friendship-links',
+                    '.links', '.link-list', '.link-area', '.about-links',
+                    '.site-record', '#site-record', '.icp', '#icp', '.beian', '#beian',
+                    // 导航区域
+                    'nav', '.nav', '#nav', '.navbar', '#navbar', '[role="navigation"]',
+                    '.menu', '#menu', '.navigation', '#navigation',
+                    '.breadcrumb', '.breadcrumbs', '#breadcrumb', '#breadcrumbs',
+                    '.tabs', '#tabs', '[role="tablist"]', 
+                    '.pagination', '#pagination',
+                    // 侧边栏区域
+                    'aside', '.sidebar', '#sidebar', '[role="complementary"]',
+                    // 社交和分享区域
+                    '.social-links', '#social-links', '.share-buttons', '#share-buttons',
+                    '.social-media', '#social-media', '.social-icons', '#social-icons',
+                    // 其他通用区域
+                    '.site-policy', '#site-policy', '.terms', '#terms', '.privacy', '#privacy', 
+                    '.about-us', '#about-us', '.contact-us', '#contact-us',
+                    '.help-center', '#help-center', '.support-links', '#support-links',
+                    '.subscribe', '#subscribe', '.newsletter', '#newsletter',
+                    // 与底部相关的区选择器
+                    '[class*="footer"]', '[id*="footer"]', '[class*="bottom"]', '[id*="bottom"]',
+                    '[class*="copyright"]', '[id*="copyright"]', '[class*="rights"]', '[id*="rights"]',
+                    '.about-section', '#about-section', '.contact-section', '#contact-section'
+                ];
+                
+                // 检查元素是否在排除区域内
+                const isInExcludedArea = (element) => {
+                    if (!element) return false;
+                    
+                    // 检查元素的祖先是否匹配排除选择器
+                    let parent = element;
+                    while (parent) {
+                        for (const selector of excludedSelectors) {
+                            if (parent.matches && parent.matches(selector)) return true;
+                        }
+                        parent = parent.parentElement;
+                    }
+                    
+                    return false;
+                };
+                
                 // 分析页面交互元素的结构和目的
                 const getElementPurpose = (el) => {
                     const text = (el.textContent || el.value || '').trim().toLowerCase();
@@ -963,10 +1122,11 @@ class WebExplorer:
                 // 获取重要的按钮
                 const importantButtons = Array.from(document.querySelectorAll('button, input[type="button"], input[type="submit"], [role="button"]'))
                     .filter(btn => {
-                        // 过滤掉隐藏和禁用的按钮
+                        // 过滤掉隐藏、禁用和排除区域内的按钮
                         return window.getComputedStyle(btn).display !== 'none' &&
                                window.getComputedStyle(btn).visibility !== 'hidden' &&
-                               !btn.disabled;
+                               !btn.disabled &&
+                               !isInExcludedArea(btn);
                     })
                     .map(btn => {
                         return {
@@ -989,11 +1149,11 @@ class WebExplorer:
                 // 获取重要的链接
                 const importantLinks = Array.from(document.querySelectorAll('a'))
                     .filter(link => {
-                        // 过滤掉空链接和隐藏链接
+                        // 过滤掉空链接、隐藏链接和排除区域内的链接
                         const hasText = (link.textContent || '').trim().length > 0;
                         const isVisible = window.getComputedStyle(link).display !== 'none' &&
                                           window.getComputedStyle(link).visibility !== 'hidden';
-                        return hasText && isVisible;
+                        return hasText && isVisible && !isInExcludedArea(link);
                     })
                     .map(link => {
                         return {
@@ -1019,12 +1179,64 @@ class WebExplorer:
 
             # 提取页面内容语义结构（而不是完整文本）
             await safe_evaluate("""() => {
+                // 排除的区域选择器列表
+                const excludedSelectors = [
+                    // 页眉区域
+                    'header', '.header', '#header', '[role="banner"]',
+                    // 页脚区域
+                    'footer', '.footer', '#footer', '[role="contentinfo"]',
+                    '.copyright', '#copyright', '.legal', '#legal',
+                    '.site-info', '#site-info', '.site-footer', '#site-footer',
+                    '.bottom-footer', '#bottom-footer', '.footer-bottom', '#footer-bottom',
+                    '.footer-links', '#footer-links', '.footer-menu', '#footer-menu',
+                    '.footer-wrapper', '#footer-wrapper', '.footer-content', '#footer-content',
+                    '.friend-links', '#friend-links', '.friendship-links', '#friendship-links',
+                    '.links', '.link-list', '.link-area', '.about-links',
+                    '.site-record', '#site-record', '.icp', '#icp', '.beian', '#beian',
+                    // 导航区域
+                    'nav', '.nav', '#nav', '.navbar', '#navbar', '[role="navigation"]',
+                    '.menu', '#menu', '.navigation', '#navigation',
+                    '.breadcrumb', '.breadcrumbs', '#breadcrumb', '#breadcrumbs',
+                    // 侧边栏区域
+                    'aside', '.sidebar', '#sidebar', '[role="complementary"]',
+                    // 社交和分享区域
+                    '.social-links', '#social-links', '.share-buttons', '#share-buttons',
+                    '.social-media', '#social-media', '.social-icons', '#social-icons',
+                    // 其他通用区域
+                    '.site-policy', '#site-policy', '.terms', '#terms', '.privacy', '#privacy', 
+                    '.about-us', '#about-us', '.contact-us', '#contact-us',
+                    '.help-center', '#help-center', '.support-links', '#support-links',
+                    '.subscribe', '#subscribe', '.newsletter', '#newsletter',
+                    // 与底部相关的区选择器
+                    '[class*="footer"]', '[id*="footer"]', '[class*="bottom"]', '[id*="bottom"]',
+                    '[class*="copyright"]', '[id*="copyright"]', '[class*="rights"]', '[id*="rights"]',
+                    '.about-section', '#about-section', '.contact-section', '#contact-section'
+                ];
+                
+                // 检查元素是否在排除区域内
+                const isInExcludedArea = (element) => {
+                    if (!element) return false;
+                    
+                    // 检查元素的祖先是否匹配排除选择器
+                    let parent = element;
+                    while (parent) {
+                        for (const selector of excludedSelectors) {
+                            if (parent.matches && parent.matches(selector)) return true;
+                        }
+                        parent = parent.parentElement;
+                    }
+                    
+                    return false;
+                };
+                
                 // 提取页面的语义结构
                 const extractSemanticStructure = () => {
                     const structure = [];
 
                     // 提取标题层次结构
-                    const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+                    const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+                        .filter(heading => !isInExcludedArea(heading));
+                    
                     const headingStructure = headings.map(heading => {
                         return {
                             level: parseInt(heading.tagName.substring(1)),
@@ -1040,7 +1252,9 @@ class WebExplorer:
                     }
 
                     // 提取列表结构
-                    const lists = Array.from(document.querySelectorAll('ul, ol'));
+                    const lists = Array.from(document.querySelectorAll('ul, ol'))
+                        .filter(list => !isInExcludedArea(list));
+                    
                     const listStructure = lists.map(list => {
                         const items = Array.from(list.querySelectorAll('li')).map(li => li.textContent.trim());
                         return {
@@ -1064,7 +1278,7 @@ class WebExplorer:
 
                     if (mainElement) {
                         const paragraphs = Array.from(mainElement.querySelectorAll('p'))
-                            .filter(p => p.textContent.trim().length > 0)
+                            .filter(p => p.textContent.trim().length > 0 && !isInExcludedArea(p))
                             .map(p => {
                                 // 智能提取段落摘要，保留关键信息
                                 const text = p.textContent.trim();
