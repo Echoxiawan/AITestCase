@@ -177,13 +177,22 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="bi bi-house-door me-1"></i>首页</a>
+                        <a class="nav-link active" href="#" data-i18n="nav_home"><i class="bi bi-house-door me-1"></i>首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#features"><i class="bi bi-lightning-charge me-1"></i>功能</a>
+                        <a class="nav-link" href="#features" data-i18n="nav_features"><i class="bi bi-lightning-charge me-1"></i>功能</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#form-section"><i class="bi bi-file-earmark-plus me-1"></i>生成测试用例</a>
+                        <a class="nav-link" href="#form-section" data-i18n="nav_generate"><i class="bi bi-file-earmark-plus me-1"></i>生成测试用例</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-i18n="language">
+                            <i class="bi bi-globe me-1"></i>语言
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="#" onclick="switchLanguage('zh')" data-i18n="lang_zh">中文</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="switchLanguage('en')" data-i18n="lang_en">English</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -205,42 +214,42 @@
 
         <!-- 表单部分 -->
         <section id="form-section" class="py-5">
-            <h2 class="text-center fw-bold mb-5" style="color: #2a3f65;">生成测试用例</h2>
+            <h2 class="text-center fw-bold mb-5" style="color: #2a3f65;" data-i18n="form_title">生成测试用例</h2>
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-braces me-2"></i>参数配置
+                    <i class="bi bi-braces me-2"></i><span data-i18n="config_title">参数配置</span>
                 </div>
                 <div class="card-body p-4">
                     <form action="{{ url_for('generate') }}" method="post" enctype="multipart/form-data">
                         <div class="mb-4">
-                            <label for="url" class="form-label">网页URL</label>
-                            <input type="url" class="form-control" id="url" name="url" required placeholder="https://example.com">
-                            <div class="form-text">输入您要测试的网页URL</div>
+                            <label for="url" class="form-label" data-i18n="url_label">网页URL</label>
+                            <input type="url" class="form-control" id="url" name="url" required placeholder="https://example.com" data-i18n="url_placeholder">
+                            <div class="form-text" data-i18n="url_help">输入您要测试的网页URL</div>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label">登录方式</label>
+                            <label class="form-label" data-i18n="login_method_label">登录方式</label>
                             <select class="form-select mb-3" id="login_method" name="login_method">
-                                <option value="none">无需登录</option>
-                                <option value="credentials">用户名和密码</option>
-                                <option value="cookies">Cookies</option>
+                                <option value="none" data-i18n="login_none">无需登录</option>
+                                <option value="credentials" data-i18n="login_credentials">用户名和密码</option>
+                                <option value="cookies" data-i18n="login_cookies">Cookies</option>
                             </select>
 
                             <!-- 用户名密码登录字段 -->
                             <div id="credentials_container" class="login-method-container" style="display: none;">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="username" class="form-label">用户名</label>
-                                        <input type="text" class="form-control" id="username" name="username" placeholder="输入用户名">
+                                        <label for="username" class="form-label" data-i18n="username_label">用户名</label>
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="输入用户名" data-i18n="username_placeholder">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="password" class="form-label">密码</label>
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="输入密码">
+                                        <label for="password" class="form-label" data-i18n="password_label">密码</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="输入密码" data-i18n="password_placeholder">
                                     </div>
                                 </div>
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" id="use_ai_login" name="use_ai_login">
-                                    <label class="form-check-label" for="use_ai_login">
+                                    <label class="form-check-label" for="use_ai_login" data-i18n="ai_login_label">
                                         使用AI智能识别登录元素
                                     </label>
                                 </div>
@@ -248,21 +257,21 @@
 
                             <!-- Cookies登录字段 -->
                             <div id="cookies_container" class="login-method-container" style="display: none;">
-                                <label for="cookies" class="form-label">Cookies</label>
-                                <textarea class="form-control" id="cookies" name="cookies" rows="3" placeholder="格式: cookie1=value1; cookie2=value2;"></textarea>
-                                <div class="form-text">从浏览器开发者工具中复制Cookie值</div>
+                                <label for="cookies" class="form-label" data-i18n="cookies_label">Cookies</label>
+                                <textarea class="form-control" id="cookies" name="cookies" rows="3" placeholder="格式: cookie1=value1; cookie2=value2;" data-i18n="cookies_placeholder"></textarea>
+                                <div class="form-text" data-i18n="cookies_help">从浏览器开发者工具中复制Cookie值</div>
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label">需求文档（可选）</label>
+                            <label class="form-label" data-i18n="requirements_label">需求文档（可选）</label>
                             <div id="dragDropArea" class="mb-2">
                                 <i class="bi bi-cloud-upload fs-3 mb-2 text-primary"></i>
-                                <p class="mb-1">拖拽文件到此处或点击上传</p>
-                                <p class="text-muted small">支持的格式: .txt, .md, .docx, .pdf</p>
+                                <p class="mb-1" data-i18n="drag_drop">拖拽文件到此处或点击上传</p>
+                                <p class="text-muted small" data-i18n="supported_formats">支持的格式: .txt, .md, .docx, .pdf</p>
                                 <input type="file" id="requirements" name="requirements" multiple style="display: none;">
                                 <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="browseBtn">
-                                    <i class="bi bi-folder"></i> 浏览文件
+                                    <i class="bi bi-folder"></i> <span data-i18n="browse_files">浏览文件</span>
                                 </button>
                             </div>
                             <div id="fileList" class="file-list"></div>
@@ -271,7 +280,7 @@
                         <div class="mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="include_old" name="include_old">
-                                <label class="form-check-label" for="include_old">
+                                <label class="form-check-label" for="include_old" data-i18n="include_old_label">
                                     包含旧功能的测试用例
                                 </label>
                             </div>
@@ -280,7 +289,7 @@
                         <div class="mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="show_browser" name="show_browser">
-                                <label class="form-check-label" for="show_browser">
+                                <label class="form-check-label" for="show_browser" data-i18n="show_browser_label">
                                     显示浏览器操作过程（调试用）
                                 </label>
                             </div>
@@ -288,7 +297,7 @@
 
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-lg px-5">
-                                <i class="bi bi-lightning-charge me-2"></i>生成测试用例
+                                <i class="bi bi-lightning-charge me-2"></i><span data-i18n="generate_button">生成测试用例</span>
                             </button>
                         </div>
                     </form>
@@ -299,14 +308,14 @@
         <!-- 欢迎部分 -->
         <div class="row align-items-center py-4">
             <div class="col-lg-6">
-                <h1 class="fw-bold mb-4" style="color: #2a3f65;">智能测试用例生成</h1>
-                <p class="lead">基于当前网页和需求文档智能生成高质量测试用例，提高测试效率，减少重复工作。</p>
+                <h1 class="fw-bold mb-4" style="color: #2a3f65;" data-i18n="welcome_title">智能测试用例生成</h1>
+                <p class="lead" data-i18n="welcome_description">基于当前网页和需求文档智能生成高质量测试用例，提高测试效率，减少重复工作。</p>
                 <div class="d-flex gap-3 mt-4">
                     <a href="#" class="btn btn-primary btn-lg" onclick="window.scrollTo(0, 0);">
-                        <i class="bi bi-magic me-2"></i>开始生成
+                        <i class="bi bi-magic me-2"></i><span data-i18n="start_generate">开始生成</span>
                     </a>
                     <a href="#features" class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-info-circle me-2"></i>了解更多
+                        <i class="bi bi-info-circle me-2"></i><span data-i18n="learn_more">了解更多</span>
                     </a>
                 </div>
             </div>
@@ -317,15 +326,15 @@
 
         <!-- 特点部分 -->
         <section id="features" class="py-5">
-            <h2 class="text-center fw-bold mb-5" style="color: #2a3f65;">强大功能</h2>
+            <h2 class="text-center fw-bold mb-5" style="color: #2a3f65;" data-i18n="features_title">强大功能</h2>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feature-item text-center">
                         <div class="feature-icon mx-auto">
                             <i class="bi bi-file-earmark-check"></i>
                         </div>
-                        <h4 class="fw-bold">智能生成测试用例</h4>
-                        <p>基于网页内容和需求文档智能生成测试用例，提高质量和覆盖率。</p>
+                        <h4 class="fw-bold" data-i18n="feature_1_title">智能生成测试用例</h4>
+                        <p data-i18n="feature_1_desc">基于网页内容和需求文档智能生成测试用例，提高质量和覆盖率。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -333,8 +342,8 @@
                         <div class="feature-icon mx-auto">
                             <i class="bi bi-key"></i>
                         </div>
-                        <h4 class="fw-bold">多种登录方式</h4>
-                        <p>支持用户名/密码或Cookies登录，灵活应对不同认证需求。</p>
+                        <h4 class="fw-bold" data-i18n="feature_2_title">多种登录方式</h4>
+                        <p data-i18n="feature_2_desc">支持用户名/密码或Cookies登录，灵活应对不同认证需求。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -342,8 +351,8 @@
                         <div class="feature-icon mx-auto">
                             <i class="bi bi-file-earmark-excel"></i>
                         </div>
-                        <h4 class="fw-bold">Excel导出</h4>
-                        <p>支持将测试用例导出为Excel格式，便于分享和管理。</p>
+                        <h4 class="fw-bold" data-i18n="feature_3_title">Excel导出</h4>
+                        <p data-i18n="feature_3_desc">支持将测试用例导出为Excel格式，便于分享和管理。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -351,8 +360,8 @@
                         <div class="feature-icon mx-auto">
                             <i class="bi bi-link-45deg"></i>
                         </div>
-                        <h4 class="fw-bold">需求关联</h4>
-                        <p>自动关联测试用例与需求文档，确保测试覆盖全部功能。</p>
+                        <h4 class="fw-bold" data-i18n="feature_4_title">需求关联</h4>
+                        <p data-i18n="feature_4_desc">自动关联测试用例与需求文档，确保测试覆盖全部功能。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -360,8 +369,8 @@
                         <div class="feature-icon mx-auto">
                             <i class="bi bi-globe"></i>
                         </div>
-                        <h4 class="fw-bold">Web界面</h4>
-                        <p>提供友好的Web界面，无需命令行即可轻松使用所有功能。</p>
+                        <h4 class="fw-bold" data-i18n="feature_5_title">Web界面</h4>
+                        <p data-i18n="feature_5_desc">提供友好的Web界面，无需命令行即可轻松使用所有功能。</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -369,8 +378,8 @@
                         <div class="feature-icon mx-auto">
                             <i class="bi bi-gear"></i>
                         </div>
-                        <h4 class="fw-bold">可自定义</h4>
-                        <p>灵活的配置选项，适应不同项目需求。</p>
+                        <h4 class="fw-bold" data-i18n="feature_6_title">可自定义</h4>
+                        <p data-i18n="feature_6_desc">灵活的配置选项，适应不同项目需求。</p>
                     </div>
                 </div>
             </div>
@@ -378,14 +387,14 @@
 
         <!-- 命令行示例部分 -->
         <section class="py-5">
-            <h2 class="text-center fw-bold mb-4" style="color: #2a3f65;">命令行使用示例</h2>
+            <h2 class="text-center fw-bold mb-4" style="color: #2a3f65;" data-i18n="cmd_title">命令行使用示例</h2>
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-terminal me-2"></i>命令行参数示例
+                    <i class="bi bi-terminal me-2"></i><span data-i18n="cmd_header">命令行参数示例</span>
                 </div>
                 <div class="card-body">
                     <pre class="bg-dark text-light p-3 rounded mb-3"><code>python main.py --url https://example.com --username user --password pass</code></pre>
-                    <p class="mb-2">查看所有可用参数：</p>
+                    <p class="mb-2" data-i18n="cmd_help">查看所有可用参数：</p>
                     <pre class="bg-dark text-light p-3 rounded"><code>python main.py --help</code></pre>
                 </div>
             </div>
@@ -397,10 +406,10 @@
         <div class="container">
             <div class="row py-3">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="mb-0">&copy; 2023 AI测试用例生成器</p>
+                    <p class="mb-0" data-i18n="footer_copyright">&copy; 2023 AI测试用例生成器</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <p class="mb-0">基于Python和AI技术构建</p>
+                    <p class="mb-0" data-i18n="footer_tech">基于Python和AI技术构建</p>
                 </div>
             </div>
         </div>
@@ -408,6 +417,7 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const loginMethodSelect = document.getElementById('login_method');
