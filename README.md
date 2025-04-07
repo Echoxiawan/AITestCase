@@ -14,7 +14,7 @@ A tool for generating test cases based on the current webpage and requirement do
 
 ## Installation Steps
 
-1. Ensure Python 3.8 or higher is installed.
+1. Ensure Python 3.9 or higher is installed.
 2. Clone or download this repository.
 3. Install dependencies:
    ```
