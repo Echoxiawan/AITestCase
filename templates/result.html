@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AITestCase - Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .progress-container {
+            margin: 20px 0;
+        }
+        #progress-bar {
+            height: 25px;
+            transition: width 0.3s;
+        }
+        .result-container {
+            display: none;
+            margin-top: 30px;
+        }
+        .log-container {
+            height: 300px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+        .log-line {
+            margin-bottom: 5px;
+        }
+        .spinner-border {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="text-center mb-0">AITestCase - Test Generation Progress</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-container mb-4">
+                            <h4>Test Parameters Summary</h4>
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 30%">URLs</th>
+                                        <td>{{ urls }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Login Method</th>
+                                        <td>{{ login_method }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Include Old Features</th>
+                                        <td>{{ "Yes" if include_old else "No" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Requirement Files</th>
+                                        <td>{{ requirements_files|join(', ') if requirements_files else "None" }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="progress-container">
+                            <h4>Current Progress: <span id="status-text">Initializing...</span></h4>
+                            <div class="progress">
+                                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-muted mt-2">Please wait while AITestCase is processing your request...</p>
+                        </div>
+
+                        <div class="log-container">
+                            <div id="log-content"></div>
+                        </div>
+
+                        <div id="result-container" class="result-container text-center">
+                            <div class="alert alert-success">
+                                <h4><i class="bi bi-check-circle-fill"></i> Test cases have been successfully generated!</h4>
+                            </div>
+                            <p>Your test cases have been generated and saved to an Excel file.</p>
+                            <a id="download-link" href="#" class="btn btn-primary btn-lg">
+                                <i class="bi bi-download"></i> Download Test Cases
+                            </a>
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary btn-lg ml-3 mt-2">
+                                <i class="bi bi-arrow-left"></i> Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            let logUpdateInterval;
+            let progressUpdateInterval;
+            
+            // Start the process
+            $.ajax({
+                url: '/process',
+                type: 'POST',
+                data: {
+                    urls: "{{ urls }}",
+                    login_method: "{{ login_method }}",
+                    username: "{{ username }}",
+                    password: "{{ password }}",
+                    cookies: "{{ cookies }}",
+                    include_old: "{{ include_old }}",
+                    use_ai_login: "{{ use_ai_login }}"
+                },
+                success: function(response) {
+                    // Process started successfully
+                    startProgressUpdates();
+                    startLogUpdates();
+                },
+                error: function(xhr, status, error) {
+                    $('#status-text').text('Error: Failed to start processing');
+                    appendToLog('Error: ' + error);
+                }
+            });
+
+            function startProgressUpdates() {
+                progressUpdateInterval = setInterval(function() {
+                    $.ajax({
+                        url: '/progress',
+                        type: 'GET',
+                        success: function(data) {
+                            updateProgress(data);
+                            
+                            if (data.status === 'completed' || data.status === 'error') {
+                                clearInterval(progressUpdateInterval);
+                                clearInterval(logUpdateInterval);
+                                
+                                if (data.status === 'completed') {
+                                    showCompletedState(data.output_file);
+                                }
+                            }
+                        },
+                        error: function() {
+                            appendToLog('Error: Failed to fetch progress update');
+                        }
+                    });
+                }, 1000);
+            }
+
+            function startLogUpdates() {
+                logUpdateInterval = setInterval(function() {
+                    $.ajax({
+                        url: '/log_updates',
+                        type: 'GET',
+                        success: function(data) {
+                            if (data.log_lines && data.log_lines.length > 0) {
+                                data.log_lines.forEach(function(line) {
+                                    appendToLog(line);
+                                });
+                            }
+                        }
+                    });
+                }, 1000);
+            }
+
+            function updateProgress(data) {
+                let percent = data.percent || 0;
+                $('#progress-bar').css('width', percent + '%').attr('aria-valuenow', percent);
+                $('#status-text').text(data.message || 'Processing...');
+            }
+
+            function showCompletedState(outputFile) {
+                $('#result-container').show();
+                $('#download-link').attr('href', '/download/' + outputFile);
+            }
+
+            function appendToLog(text) {
+                $('#log-content').append('<div class="log-line">' + text + '</div>');
+                // Auto-scroll to bottom
+                let logContainer = $('.log-container');
+                logContainer.scrollTop(logContainer[0].scrollHeight);
+            }
+        });
+    </script>
+</body>
+</html>

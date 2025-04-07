@@ -45,29 +45,75 @@ MAX_DEPTH=2  # 最大探索深度
 
 ## 3. 使用方法
 
-### 3.1 启动工具
+### 3.1 Web界面使用
+
+AITestCase现提供了直观友好的Web界面，让您无需命令行操作即可使用所有功能。
+
+#### 3.1.1 启动Web界面
+
+```bash
+python main.py --web
+```
+
+启动后，打开浏览器访问 `http://localhost:5000` 进入Web界面。
+
+#### 3.1.2 Web界面功能
+
+Web界面提供以下核心功能：
+
+- **优雅的用户界面**：美观现代的设计，操作直观简便
+- **表单填写**：通过表单填写所有测试参数，无需记忆命令行选项
+- **文件上传**：支持拖放上传需求文档（支持.txt、.md、.docx格式）
+- **多种登录方式**：支持用户名密码登录、Cookie登录或无需登录
+- **实时进度反馈**：生成测试用例时提供直观的进度显示
+- **结果下载**：生成完成后一键下载Excel测试用例文件
+
+#### 3.1.3 使用步骤
+
+1. **输入URL**：填写要测试的网页URL
+2. **选择登录方式**：
+   - 无需登录：直接探索公开页面
+   - 用户名密码：输入账号和密码登录网站
+   - Cookies登录：粘贴Cookie字符串进行登录
+3. **上传需求文档**：可拖放上传一个或多个需求文档
+4. **开始生成**：点击"生成测试用例"按钮开始处理
+5. **查看进度**：观察处理进度和当前执行的阶段
+6. **下载结果**：处理完成后下载Excel测试用例文件
+
+#### 3.1.4 Web界面示例
+
+下图展示了AITestCase的Web界面，您可以在此页面上配置所有测试参数：
+
+![AITestCase Web界面](./页面.png)
+
+上图为AITestCase的Web操作界面，您可以在此设置URL、登录方式、上传需求文档等参数，简单直观地生成测试用例。
+
+![AITestCase 结果页面](./页面2.png)
+
+上图展示了AITestCase生成测试用例后的结果页面，您可以在此查看测试结果并下载Excel文件。
+
+### 3.2 启动工具（命令行）
 
 ```bash
 python main.py
 ```
 
-### 3.2 交互式使用
+### 3.3 交互式使用
 
 启动工具后，按照提示输入信息：
 
 1. **输入要测试的页面URL**：可以输入多个URL，用逗号分隔
-2. **选择设备类型**：选择桌面设备、手机或平板
-3. **选择登录方式**：
+2. **选择登录方式**：
    - 无需登录：直接探索页面
    - 账号密码登录：提供用户名、密码和验证码（如果需要）
    - AI智能登录：使用AI技术自动识别各种登录页面元素
    - Cookies登录：提供包含认证信息的Cookies字符串
-4. **输入需求文档**：可以输入多个需求文档的名称和路径
+3. **输入需求文档**：可以输入多个需求文档的名称和路径
    - 支持的格式包括.txt（纯文本）、.md（Markdown）和.docx（Microsoft Word）
    - Word文档将自动转换为Markdown格式进行分析
-5. **选择测试用例生成范围**：是否包含旧功能的测试用例
+4. **选择测试用例生成范围**：是否包含旧功能的测试用例
 
-### 3.3 命令行参数
+### 3.4 命令行参数
 
 也可以通过命令行参数运行工具，支持批量处理和自动化集成：
 
@@ -87,14 +133,14 @@ python main.py --urls "https://example.com,https://example.com/page2" --requirem
 - `--api-key`: OpenAI API密钥
 - `--output`: 输出文件名
 - `--output-dir`: 输出目录
-- `--device-type`: 设备类型，可选值为 `desktop`（桌面设备）、`mobile`（手机）或 `tablet`（平板）
 - `--use-ai-login`: 是否使用AI智能识别登录元素（不需要值，仅标志）
+- `--web`: 启动Web界面模式（不需要值，仅标志）
 
-### 3.4 AI智能登录功能
+### 3.5 AI智能登录功能
 
 工具支持使用AI技术智能识别各种登录页面元素，适用于复杂和非标准的登录页面。
 
-#### 3.4.1 启用AI智能登录
+#### 3.5.1 启用AI智能登录
 
 交互式启动时，在登录方式选择中选择"使用AI智能登录"：
 ```
@@ -106,14 +152,14 @@ python main.py --urls "https://example.com,https://example.com/page2" --requirem
 python main.py --urls "https://example.com" --username "your_username" --password "your_password" --use-ai-login
 ```
 
-#### 3.4.2 AI智能登录工作原理
+#### 3.5.2 AI智能登录工作原理
 
 1. **多级识别策略**：首先使用基于规则的方法快速识别常见登录元素，然后使用AI技术进行优化和补充
 2. **验证码智能处理**：能够识别验证码图片附近的输入框，准确填写验证码
 3. **多种登录按钮支持**：支持各种UI框架的登录按钮，包括标准按钮、特殊类名按钮和自定义按钮
 4. **自动回退机制**：当AI识别失败时，自动切换到传统登录方法，确保登录过程可靠
 
-#### 3.4.3 适用场景
+#### 3.5.3 适用场景
 
 AI智能登录特别适用于以下场景：
 
@@ -123,27 +169,22 @@ AI智能登录特别适用于以下场景：
 - 自定义登录组件：使用自定义UI组件或特殊布局的登录表单
 - 多步骤登录：需要多步操作才能完成的登录流程
 
-命令行方式启动时，可以使用 `--device-type` 参数指定设备类型：
-```bash
-python main.py --urls "https://example.com" --device-type mobile
-```
-
-### 3.5 文档格式支持
+### 3.6 文档格式支持
 
 本工具现在支持多种格式的需求文档：
 
-#### 3.5.1 支持的格式
+#### 3.6.1 支持的格式
 - **纯文本 (.txt)**：简单的文本需求文件
 - **Markdown (.md)**：具有Markdown格式的结构化内容
 - **Microsoft Word (.docx)**：Office文档格式
 
-#### 3.5.2 文档转换
+#### 3.6.2 文档转换
 当您提供Word文档时，工具会自动：
 1. 将DOCX文件转换为Markdown格式
 2. 保留文档结构，包括标题、列表和表格
 3. 使用转换后的内容生成测试用例
 
-#### 3.5.3 不同文档格式的使用示例
+#### 3.6.3 不同文档格式的使用示例
 ```bash
 # 使用Word文档
 python main.py --url https://example.com --requirements-files "需求说明.docx"
@@ -286,9 +327,8 @@ Cookies通常包含身份验证信息，使用它可以绕过复杂的登录过�
    - [传统登录方式](#传统登录方式)
    - [AI辅助登录](#ai辅助登录)
    - [Cookie登录](#cookie登录)
-3. [设备模拟](#设备模拟)
-4. [生成测试用例](#生成测试用例)
-5. [常见问题](#常见问题)
+3. [生成测试用例](#生成测试用例)
+4. [常见问题](#常见问题)
 
 ## 基本用法
 
@@ -302,14 +342,14 @@ AItester提供了两种使用方式：交互式命令行和参数模式。
 python main.py
 ```
 
-系统会引导您输入所需的信息，包括URL、登录方式、设备类型等。
+系统会引导您输入所需的信息，包括URL、登录方式等。
 
 ### 参数模式
 
 您也可以通过命令行参数直接指定：
 
 ```bash
-python main.py --url https://example.com --depth 2 --device desktop --output output/测试结果.xlsx
+python main.py --url https://example.com --depth 2 --output output/测试结果.xlsx
 ```
 
 ## 登录功能
@@ -359,21 +399,6 @@ AI辅助登录功能会：
 
 ```bash
 python main.py --url https://example.com --login-url https://example.com --cookies "name1=value1; name2=value2"
-```
-
-## 设备模拟
-
-AItester支持模拟不同的设备类型：
-
-```bash
-# 桌面浏览器
-python main.py --url https://example.com --device desktop
-
-# 移动设备
-python main.py --url https://example.com --device mobile
-
-# 平板设备
-python main.py --url https://example.com --device tablet
 ```
 
 ## 生成测试用例

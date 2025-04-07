@@ -6,11 +6,11 @@ A tool for generating test cases based on the current webpage and requirement do
 
 - 📋 **Test Case Generation**: Automatically generate test cases based on the current page and requirement document content, solving the problem of poor quality test cases generated from a single requirement document.
 - 🔐 **Multiple Login Methods**: Supports login with username/password and cookies.
-- 📱 **Multi-Device Support**: Simulates desktop, mobile, and tablet devices.
 - 📊 **Excel Export**: Supports exporting test cases to Excel format.
 - 📝 **Requirement Association**: Automatically associates test cases with requirement documents.
 - 🛠️ **Customizable**: Flexible configuration options to suit different project needs.
 - 📄 **Multiple Document Formats**: Supports requirement documents in various formats including plain text, Markdown, and Word (DOCX).
+- 🌐 **Web Interface**: Provides a beautiful and user-friendly web interface for easier use.
 
 ## Installation Steps
 
@@ -27,7 +27,29 @@ A tool for generating test cases based on the current webpage and requirement do
 
 ## Usage
 
+### Web Interface
+
+You can use the web interface for a more user-friendly experience:
+
+```bash
+# Start the web interface
+python main.py --web
+```
+
+
+Then open your browser and navigate to `http://localhost:5000` to access the interface.
+
+![AITestCase Web Interface](doc/页面.png)
+
+The image above shows the AITestCase web interface where you can configure test parameters such as URL, login method, and requirement documents in a simple and intuitive way.
+
+![AITestCase Result Page](doc/页面2.png)
+
+The image above shows the result page after AITestCase generates test cases, where you can view test results and download the Excel file.
+
 ### Basic Usage
+
+### Command Line Usage
 
 ```bash
 # Basic usage
@@ -38,9 +60,6 @@ python main.py --url <website URL> --username <username> --password <password>
 
 # Login with cookies
 python main.py --url <website URL> --cookies "<cookie string>"
-
-# Specify device type (desktop/mobile/tablet)
-python main.py --url <website URL> --device <desktop|mobile|tablet>
 
 # Use requirements documents (supports .txt, .md, .docx)
 python main.py --url <website URL> --requirements "requirement1.docx,requirement2.md,requirement3.txt"

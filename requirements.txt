@@ -7,3 +7,4 @@ argparse
 rich
 tqdm
 docling
+flask

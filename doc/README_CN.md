@@ -6,11 +6,11 @@
 
 - 📋 **测试用例生成**：基于当前页面和需求文档内容自动生成测试用例，解决单个需求文档生成测试用例质量较差的问题
 - 🔐 **多种登录方式**：支持账号密码登录和Cookie登录
-- 📱 **多设备支持**：支持模拟桌面、手机和平板设备
 - 📊 **Excel导出**：支持将测试用例导出为Excel格式
 - 📝 **需求关联**：自动将测试用例与需求文档关联
 - 🛠️ **可定制化**：灵活的配置选项适应不同项目需求
 - 📄 **多种文档格式**：支持纯文本、Markdown和Word(DOCX)等多种格式的需求文档
+- 🌐 **Web界面**：提供美观友好的Web界面，使用更加便捷
 
 ## 安装步骤
 
@@ -27,7 +27,26 @@
 
 ## 使用方法
 
-### 基本用法
+### Web界面使用
+
+您可以使用Web界面获得更友好的使用体验：
+
+```bash
+# 启动Web界面
+python main.py --web
+```
+
+然后打开浏览器访问 `http://localhost:5000` 即可使用Web界面。
+
+![AITestCase Web界面](页面.png)
+
+上图为AITestCase的Web操作界面，您可以在此设置URL、登录方式、上传需求文档等参数，简单直观地生成测试用例。
+
+![AITestCase 结果页面](页面2.png)
+
+上图展示了AITestCase生成测试用例后的结果页面，您可以在此查看测试结果并下载Excel文件。
+
+### 命令行使用
 
 ```bash
 # 基本使用方法
@@ -38,9 +57,6 @@ python main.py --url <网站URL> --username <用户名> --password <密码>
 
 # 使用Cookie登录
 python main.py --url <网站URL> --cookies "<Cookie字符串>"
-
-# 指定设备类型（桌面/移动/平板）
-python main.py --url <网站URL> --device <desktop|mobile|tablet>
 
 # 使用需求文档（支持.txt、.md、.docx格式）
 python main.py --url <网站URL> --requirements "需求1.docx,需求2.md,需求3.txt"
@@ -54,8 +70,6 @@ python main.py --url <网站URL> --requirements "需求1.docx,需求2.md,需求3
    ```
    cookie1=value1; cookie2=value2; JSESSIONID=123456789; auth_token=abcdefg
    ```
-
-
 
 ### 示例
 

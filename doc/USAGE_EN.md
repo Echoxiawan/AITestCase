@@ -45,29 +45,75 @@ MAX_DEPTH=2  # Maximum exploration depth
 
 ## 3. Usage
 
-### 3.1 Start the Tool
+### 3.1 Web Interface
+
+AITestCase now provides an intuitive and user-friendly web interface that allows you to use all features without command line operations.
+
+#### 3.1.1 Launch Web Interface
+
+```bash
+python main.py --web
+```
+
+After launching, open your browser and navigate to `http://localhost:5000` to access the web interface.
+
+#### 3.1.2 Web Interface Features
+
+The web interface offers the following core features:
+
+- **Elegant User Interface**: Beautiful modern design with intuitive operation
+- **Form Filling**: Fill in all test parameters via forms without having to remember command line options
+- **File Upload**: Support for drag-and-drop upload of requirement documents (supports .txt, .md, .docx formats)
+- **Multiple Login Methods**: Support for username/password login, cookie login, or no login
+- **Real-time Progress Feedback**: Intuitive progress display when generating test cases
+- **Result Download**: One-click download of the Excel test case file after generation is complete
+
+#### 3.1.3 Usage Steps
+
+1. **Enter URL**: Fill in the web page URL to be tested
+2. **Select Login Method**:
+   - No login required: Directly explore public pages
+   - Username and password: Enter account and password to log in to the website
+   - Cookies login: Paste cookie string for login
+3. **Upload Requirement Documents**: Drag and drop to upload one or more requirement documents
+4. **Start Generation**: Click the "Generate Test Cases" button to start processing
+5. **View Progress**: Observe the processing progress and current execution stage
+6. **Download Results**: Download the Excel test case file after processing is complete
+
+#### 3.1.4 Web Interface Example
+
+The image below shows the AITestCase web interface where you can configure all test parameters:
+
+![AITestCase Web Interface](./页面.png)
+
+The image above shows the AITestCase web interface where you can configure test parameters such as URL, login method, and requirement documents in a simple and intuitive way.
+
+![AITestCase Result Page](./页面2.png)
+
+The image above shows the result page after AITestCase generates test cases, where you can view test results and download the Excel file.
+
+### 3.2 Start the Tool (Command Line)
 
 ```bash
 python main.py
 ```
 
-### 3.2 Interactive Use
+### 3.3 Interactive Use
 
 After starting the tool, follow the prompts to enter information:
 
 1. **Enter the URL to be tested**: Multiple URLs can be entered, separated by commas
-2. **Select Device Type**: Choose desktop, mobile, or tablet
-3. **Select Login Method**:
+2. **Select Login Method**:
    - No login required: Directly explore the page
    - Username and password login: Provide username, password, and captcha (if needed)
    - AI Smart Login: Automatically identify various login page elements using AI technology
    - Cookies Login: Provide a cookie string containing authentication information
-4. **Enter Requirement Documents**: Multiple requirement document names and paths can be entered
+3. **Enter Requirement Documents**: Multiple requirement document names and paths can be entered
    - Supported formats include .txt (plain text), .md (Markdown), and .docx (Microsoft Word)
    - Word documents will be automatically converted to Markdown format for analysis
-5. **Select Test Case Generation Scope**: Whether to include test cases for old features
+4. **Select Test Case Generation Scope**: Whether to include test cases for old features
 
-### 3.3 Command Line Parameters
+### 3.4 Command Line Parameters
 
 The tool can also be run with command line parameters, supporting batch processing and automated integration:
 
@@ -87,14 +133,14 @@ Supported command line parameters:
 - `--api-key`: OpenAI API key
 - `--output`: Output filename
 - `--output-dir`: Output directory
-- `--device-type`: Device type, options are `desktop` (desktop), `mobile` (mobile), or `tablet` (tablet)
 - `--use-ai-login`: Whether to use AI to intelligently identify login elements (no value needed, just a flag)
+- `--web`: Launch web interface mode (no value needed, just a flag)
 
-### 3.4 AI Smart Login Feature
+### 3.5 AI Smart Login Feature
 
 The tool supports using AI technology to intelligently identify various login page elements, suitable for complex and non-standard login pages.
 
-#### 3.4.1 Enable AI Smart Login
+#### 3.5.1 Enable AI Smart Login
 
 When starting interactively, choose "Use AI Smart Login" in the login method selection:
 ```
@@ -106,14 +152,14 @@ When starting with command line, use the `--use-ai-login` parameter:
 python main.py --urls "https://example.com" --username "your_username" --password "your_password" --use-ai-login
 ```
 
-#### 3.4.2 AI Smart Login Working Principle
+#### 3.5.2 AI Smart Login Working Principle
 
 1. **Multi-level Recognition Strategy**: Quickly identify common login elements using rule-based methods, then optimize and supplement with AI technology
 2. **Captcha Smart Handling**: Able to identify input boxes near captcha images and accurately fill in captchas
 3. **Support for Various Login Buttons**: Supports login buttons from various UI frameworks, including standard buttons, special class name buttons, and custom buttons
 4. **Automatic Fallback Mechanism**: When AI recognition fails, automatically switch to traditional login methods to ensure reliable login process
 
-#### 3.4.3 Applicable Scenarios
+#### 3.5.3 Applicable Scenarios
 
 AI Smart Login is particularly suitable for the following scenarios:
 
@@ -123,27 +169,22 @@ AI Smart Login is particularly suitable for the following scenarios:
 - Custom login components: Login forms with custom UI components or special layouts
 - Multi-step login: Login processes that require multiple steps to complete
 
-When starting with command line, you can specify the device type with the `--device-type` parameter:
-```bash
-python main.py --urls "https://example.com" --device-type mobile
-```
-
-### 3.5 Document Format Support
+### 3.6 Document Format Support
 
 The tool now supports multiple document formats for requirement documents:
 
-#### 3.5.1 Supported Formats
+#### 3.6.1 Supported Formats
 - **Plain Text (.txt)**: Simple text files with requirements
 - **Markdown (.md)**: Structured content with Markdown formatting
 - **Microsoft Word (.docx)**: Office document format
 
-#### 3.5.2 Document Conversion
+#### 3.6.2 Document Conversion
 When you provide a Word document, the tool automatically:
 1. Converts the DOCX file to Markdown format
 2. Preserves the document structure including headings, lists, and tables
 3. Uses the converted content for test case generation
 
-#### 3.5.3 Usage Examples with Different Document Formats
+#### 3.6.3 Usage Examples with Different Document Formats
 ```bash
 # Using a Word document
 python main.py --url https://example.com --requirements-files "requirements.docx"
@@ -276,3 +317,5 @@ To obtain and use cookies for login, follow these steps:
 6. In the tool, choose "Use Cookies Login" and paste the copied content
 
 Cookies usually contain authentication information, allowing you to bypass complex login processes.
+
+## Advanced Features
