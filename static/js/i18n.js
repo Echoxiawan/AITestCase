@@ -61,6 +61,7 @@ const translations = {
         // 页脚
         'footer_copyright': '© 2023 AI测试用例生成器',
         'footer_tech': '基于Python和AI技术构建',
+        'github_tooltip': '访问GitHub项目',
         
         // 语言选择
         'language': '语言',
@@ -128,6 +129,7 @@ const translations = {
         // Footer
         'footer_copyright': '© 2023 AI Test Case Generator',
         'footer_tech': 'Built with Python and AI Technology',
+        'github_tooltip': 'Visit GitHub Project',
         
         // Language selection
         'language': 'Language',
@@ -162,12 +164,13 @@ function switchLanguage(lang) {
 
 // 应用语言到页面元素
 function applyLanguage() {
-    const elements = document.querySelectorAll('[data-i18n]');
+    const elements = document.querySelectorAll('[data-i18n], [data-i18n-title]');
     const langData = translations[currentLang];
     
     elements.forEach(el => {
+        // 处理元素内容
         const key = el.getAttribute('data-i18n');
-        if (langData[key]) {
+        if (key && langData[key]) {
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
                 if (el.getAttribute('placeholder')) {
                     el.setAttribute('placeholder', langData[key]);
@@ -177,6 +180,12 @@ function applyLanguage() {
             } else {
                 el.textContent = langData[key];
             }
+        }
+        
+        // 处理title属性
+        const titleKey = el.getAttribute('data-i18n-title');
+        if (titleKey && langData[titleKey]) {
+            el.setAttribute('title', langData[titleKey]);
         }
     });
     
