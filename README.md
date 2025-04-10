@@ -39,6 +39,8 @@ python main.py --web
 
 Then open your browser and navigate to `http://localhost:5000` to access the interface.
 
+> **Note**: You can change the default port by setting the `APP_PORT` environment variable in your `.env` file.
+
 ![AITestCase Web Interface](doc/页面.png)
 
 The image above shows the AITestCase web interface where you can configure test parameters such as URL, login method, and requirement documents in a simple and intuitive way.

@@ -407,8 +407,8 @@ def main():
     # 如果命令行参数中包含 --web，则启动Web界面
     if '--web' in sys.argv:
         try:
-            from app import app
-            app.run(host='0.0.0.0', port=5000, debug=True)
+            from app import app, PORT
+            app.run(host='0.0.0.0', port=PORT, debug=True)
             return
         except ImportError as e:
             logger.error(f"启动Web界面失败: {str(e)}")

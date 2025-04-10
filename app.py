@@ -14,6 +14,9 @@ from werkzeug.utils import secure_filename
 import sys
 import main
 
+# 从环境变量或配置文件获取端口
+PORT = int(os.environ.get('APP_PORT', 5000))
+
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 app.config['UPLOAD_FOLDER'] = tempfile.mkdtemp(prefix="uploads_")
@@ -23,7 +26,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB 限制
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # 允许的文件类型
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'md', 'docx'}
+ALLOWED_EXTENSIONS = {'txt', 'md', 'docx'}
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -180,5 +183,10 @@ async def api_generate():
     except Exception as e:
         return jsonify({'status': 'error', 'message': f'处理过程中出错: {str(e)}'})
 
+# API别名，将'/api/test-cases'映射到'/api/generate'函数
+@app.route('/api/test-cases', methods=['POST'])
+async def api_test_cases():
+    return await api_generate()
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    app.run(host='0.0.0.0', port=PORT, debug=True) 
